@@ -1,10 +1,10 @@
 var express = require('express')
 var app = express()
+const path = require('path')
 
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const jwksClient = require('jwks-rsa')
-
 
 app.use(cookieParser)
 app.use(express.json())
@@ -35,6 +35,12 @@ const auth = async (req, res, next) =>{
         //no token 
         console.log('No Token')
         res.status(403).json({message: 'could not find token'})
+        
+        //res.sendFile(path.join(__dirname + '/pages/404.html'))  
+        
+        //ERRORS ON THE ABOVE SENDFILE
+        //RangeNotSatisfiableError: Range Not Satisfiable
+        //:4000/:1 GET http://localhost:4000/ net::ERR_CONTENT_LENGTH_MISMATCH 200 (OK)  
     } else {
         console.log('Token Found')
         client.getSigningKey(pubKey, (err, key)=>{
